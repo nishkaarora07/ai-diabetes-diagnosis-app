@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Diabetes Prediction</title>
+</head>
+<body>
+  <h2>Enter Patient Data</h2>
+  <form id="diabetesForm">
+    <input type="number" placeholder="Pregnancies" id="Pregnancies"><br>
+    <input type="number" placeholder="Glucose" id="Glucose"><br>
+    <input type="number" placeholder="BloodPressure" id="BloodPressure"><br>
+    <input type="number" placeholder="SkinThickness" id="SkinThickness"><br>
+    <input type="number" placeholder="Insulin" id="Insulin"><br>
+    <input type="number" step="0.1" placeholder="BMI" id="BMI"><br>
+    <input type="number" step="0.01" placeholder="DiabetesPedigreeFunction" id="DiabetesPedigreeFunction"><br>
+    <input type="number" placeholder="Age" id="Age"><br><br>
+    <button type="submit">Predict</button>
+  </form>
+
+  <h3 id="output"></h3>
+
+  <script>
+    document.getElementById('diabetesForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const data = {
+        Pregnancies: +document.getElementById('Pregnancies').value,
+        Glucose: +document.getElementById('Glucose').value,
+        BloodPressure: +document.getElementById('BloodPressure').value,
+        SkinThickness: +document.getElementById('SkinThickness').value,
+        Insulin: +document.getElementById('Insulin').value,
+        BMI: +document.getElementById('BMI').value,
+        DiabetesPedigreeFunction: +document.getElementById('DiabetesPedigreeFunction').value,
+        Age: +document.getElementById('Age').value,
+      };
+
+      const res = await fetch('http://localhost:5000/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+      document.getElementById('output').innerText =
+        result.result === 1 ? '⚠️ High risk of diabetes.' : '✅ Low risk of diabetes.';
+    });
+  </script>
+</body>
+</html>
